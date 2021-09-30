@@ -40,7 +40,7 @@ void get_input()
     {
         cout<<"Enter Mobile no.: +91 ";
         getline(cin, mobile);
-        const regex pattern("[6-9][0-9]{9}");
+        const regex pattern("[0-9]{10}");
 
         if(regex_match(mobile, pattern))
             break;
