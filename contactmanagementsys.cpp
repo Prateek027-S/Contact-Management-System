@@ -21,7 +21,7 @@ public:
 void Person::add_contacts()
 {
     fstream file1;
-    file1.open("Contacts.txt", ios::app | ios::in);
+    file1.open("Contacts.txt", ios::app | ios::out);
     file1<<"Name: "<<name<<endl;
     file1<<"Mobile: +91"<<mobile<<endl;
     file1<<"Address: "<<address<<endl;
