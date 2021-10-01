@@ -15,20 +15,63 @@ public:
         mobile = Mobile;
         address = Address;
     }
+    int chk_contact();
+    void edit_contact();
     void add_contacts();
 };
 
+int Person::chk_contact()
+{
+    fstream file0;
+    string st, st2;
+    int ans = -1;
+    file0.open("Contacts.txt", ios::in);
+    while(file0.eof()==0)
+    {
+        getline(file0, st);
+        getline(file0, st2);
+
+        if((st.find(name, 0)!=string::npos)&&(st2.find("+91"+mobile, 0)!=string::npos))
+        {
+            ans = 1;
+            break;
+        }
+    }
+    file0.close();
+    return ans;
+}
+
+void Person::edit_contact()
+{
+    cout<<"Edit_contact opened"<<endl;
+    exit(0);
+}
+
 void Person::add_contacts()
 {
-    fstream file1;
-    file1.open("Contacts.txt", ios::app | ios::out);
-    file1<<"Name: "<<name<<endl;
-    file1<<"Mobile: +91"<<mobile<<endl;
-    file1<<"Address: "<<address<<endl;
-    file1<<endl;
-    cout<<"Contact Details added successfully!!"<<endl;
+    int chk = chk_contact();
+    if(chk<0)
+    {
+        fstream file1;
+        file1.open("Contacts.txt", ios::app | ios::out);
+        file1<<"Name: "<<name<<endl;
+        file1<<"Mobile: +91"<<mobile<<endl;
+        file1<<"Address: "<<address<<endl;
+        file1<<endl;
+        cout<<"Contact Details added successfully!!"<<endl;
+        file1.close();
+    }
+    else
+    {
+        char yes_no;
+        cout<<"A contact with this name and mobile no. already exists in your Contact Book."<<endl;
+        cout<<"Do you want to edit the entered contact details in your Contact Book?(Y/N)";
+        cin>>yes_no;
+        if(yes_no == 'Y' || yes_no == 'y')
+            edit_contact();
+    }
     usleep(1000000);
-    file1.close();
+    system("CLS");
 }
 
 void get_input()
@@ -44,10 +87,8 @@ void get_input()
 
         if(regex_match(mobile, pattern))
             break;
-        else{
+        else
             cout<<"Please enter valid mobile number."<<endl;
-            continue;
-        }
     }
     cout<<"Enter Address: ";
     getline(cin, address);
@@ -97,7 +138,6 @@ int main()
         default:{
             cout<<"Please enter valid S.No.!!"<<endl;
             usleep(1000000);
-            system("CLS");
         }
     }
     system("CLS");
