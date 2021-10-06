@@ -25,13 +25,13 @@ int Person::chk_contact()
     fstream file0;
     string st, st2;
     int ans = -1;
-    file0.open("Contacts.txt", ios::in);
+    file0.open("ContactBook.txt", ios::in);
     while(file0.eof()==0)
     {
         getline(file0, st);
         getline(file0, st2);
 
-        if((st.find(name, 0)!=string::npos)&&(st2.find("+91"+mobile, 0)!=string::npos))
+        if((st.find(name, 0)!=string::npos)&&(st2.find(mobile, 0)!=string::npos))
         {
             ans = 1;
             break;
@@ -53,9 +53,9 @@ void Person::add_contacts()
     if(chk<0)
     {
         fstream file1;
-        file1.open("Contacts.txt", ios::app | ios::out);
+        file1.open("ContactBook.txt", ios::app | ios::out);
         file1<<"Name: "<<name<<endl;
-        file1<<"Mobile: +91"<<mobile<<endl;
+        file1<<"Mobile: "<<mobile<<endl;
         file1<<"Address: "<<address<<endl;
         file1<<endl;
         cout<<"Contact Details added successfully!!"<<endl;
@@ -81,9 +81,9 @@ void get_input()
     getline(cin, name);
     while(true)
     {
-        cout<<"Enter Mobile no.: +91 ";
+        cout<<"Enter Mobile no.(along with country code): ";
         getline(cin, mobile);
-        const regex pattern("[0-9]{10}");
+        const regex pattern("^[+]{1}[0-9]+");
 
         if(regex_match(mobile, pattern))
             break;
@@ -98,49 +98,52 @@ void get_input()
 
 int main()
 {
-    string choice;
-    int ch = 0;
-    cout<<"****"<<endl;
-    cout<<"Menu"<<endl;
-    cout<<"****"<<endl;
-    cout<<"You can perform following operations:-\n1. Add a new Contact\n2. Show all Contacts\n3. Search a Contact\n4. Edit a Contact\n5. Delete a Contact\n6. Exit"<<endl;
-    cout<<"\nEnter the S.No. of the operation you want to perform: ";
-    getline(cin, choice);
-    stringstream stream(choice);
-    stream>>ch;
-    switch(ch)
-    {
-        case 1:{
-            get_input();
-            break;
+    fstream file;
+    file.open("ContactBook.txt", ios::app);
+    file.close();
+    while (true){
+        string choice;
+        int ch = 0;
+        cout<<"****"<<endl;
+        cout<<"Menu"<<endl;
+        cout<<"****"<<endl;
+        cout<<"You can perform following operations:-\n1. Add a new Contact\n2. Show all Contacts\n3. Search a Contact\n4. Edit a Contact\n5. Delete a Contact\n6. Exit"<<endl;
+        cout<<"\nEnter the S.No. of the operation you want to perform: ";
+        getline(cin, choice);
+        stringstream stream(choice);
+        stream>>ch;
+        switch(ch)
+        {
+            case 1:{
+                get_input();
+                break;
+            }
+            case 2:{
+                //showContacts();
+                break;
+            }
+            case 3:{
+                //searchContact();
+                break;
+            }
+            case 4:{
+                //editContact();
+                break;
+            }
+            case 5:{
+                //delContact();
+                break;
+            }
+            case 6:{
+                cout<<"\nThank you for using the program!";
+                exit(0);
+            }
+            default:{
+                cout<<"Please enter valid S.No.!!"<<endl;
+                usleep(1000000);
+            }
         }
-        case 2:{
-            //showContacts();
-            break;
-        }
-        case 3:{
-            //searchContact();
-            break;
-        }
-        case 4:{
-            //editContact();
-            break;
-        }
-        case 5:{
-            //delContact();
-            break;
-        }
-        case 6:{
-            cout<<"\nThank you for using the program!";
-            exit(0);
-            break;
-        }
-        default:{
-            cout<<"Please enter valid S.No.!!"<<endl;
-            usleep(1000000);
-        }
+        system("CLS");
     }
-    system("CLS");
-    main();
     return 0;
 }
