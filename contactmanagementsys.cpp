@@ -147,6 +147,7 @@ void searchContact()
             cout<<endl;
         }
         getline(file1,name2);
+        address=" ";number=" ";name=" ";
     }
     file1.close();
     if (chk < 1)
@@ -158,6 +159,7 @@ void searchContact()
 int main()
 {
     system("cls");
+    /* to create a new file*/
     fstream file;
     file.open("ContactBook.txt", ios::app);
     file.close();
