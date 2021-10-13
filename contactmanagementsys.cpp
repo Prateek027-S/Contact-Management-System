@@ -9,6 +9,7 @@
 using namespace std;
 void showContacts();  // displays all contacts from the file
 void searchContact();  // search contacts from file
+int count_contacts(string); // counts no. of contacts present in the ContactBook
 class Person
 {
     string name, mobile, address;
@@ -111,20 +112,20 @@ void Person::delete_contact()
         if(ifile)
         {
             cout<<"A file named 'temp.txt' already exists in this directory, kindly move it to a different directory."<<endl;
-            ifile.close();
         }
         else
         {
             char oldname[] = "ContactBook.txt";
             char newname[] = "temp.txt";
-            int renaming = rename(oldname, newname);
+            int renaming = rename(oldname, newname); // Renaming the file from ContactBook.txt to temp.txt
         }
         ifile.close();
         string name2, mobile2, address2, tmp;
         fstream file1, file2;
         file1.open("temp.txt", ios::in);
-        file2.open("ContactBook.txt", ios::app | ios::out); //Opening and/or creating another file with name ContactBook.txt
-        while(!file1.eof())
+        file2.open("ContactBook.txt", ios::app | ios::out); //Creating and opening a new ContactBook.txt
+        int numcontacts = count_contacts("temp.txt");
+        for(int i=0; i < numcontacts; i++)
         {
             getline(file1, name2);
             getline(file1, mobile2);
@@ -163,18 +164,39 @@ void Person::edit_contact()
     exit(0);
 }
 
+int count_contacts(string filename)
+{
+    string Name;
+    int numcontacts=0;
+    fstream file;
+    file.open(filename, ios::in);
+    const regex format("^Name: .+");
+    while(file.eof()==0)
+    {
+        getline(file, Name);
+        if(regex_match(Name, format))
+            numcontacts++;
+    }
+    return numcontacts;
+}
+
 void showContacts(){
     system("cls");
-    cout<<setw(50)<<endl<<"Contact Details"<<endl<<endl;
-    fstream file1;
-    file1.open("ContactBook.txt", ios::in);
-    string str=" ";
-    while(file1.eof()==0)
+    if(count_contacts("ContactBook.txt")<1)
+        cout<<setw(50)<<endl<<"Contact Book is empty!"<<endl<<endl;
+    else
     {
-        getline(file1,str);
-        cout<<str<<endl;
+        cout<<setw(50)<<endl<<"Contact Details"<<endl<<endl;
+        fstream file1;
+        file1.open("ContactBook.txt", ios::in);
+        string str=" ";
+        while(file1.eof()==0)
+        {
+            getline(file1,str);
+            cout<<str<<endl;
+        }
+        file1.close();
     }
-    file1.close();
     cout<<"\nEnter any key to Continue : ";
     getchar();
 }

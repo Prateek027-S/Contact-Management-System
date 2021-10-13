@@ -22,10 +22,6 @@ Name: priti agrawal
 Mobile: +90839103746
 Address: hardia compound
 
-Name: deepak agrawal
-Mobile: +918602545647
-Address: siyaganj
-
 Name: viplave agrawal
 Mobile: +917869980037
 Address: hardia compound
@@ -33,4 +29,8 @@ Address: hardia compound
 Name: prakalp gupta
 Mobile: +918109910410
 Address: jabalpur 
+
+Name: Prateek Shah
+Mobile: +91468461354
+Address: B-22 Vinayaka, Varanasi
 
