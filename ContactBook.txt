@@ -1,14 +1,6 @@
-Name: Priyanshi Agrawal 
-Mobile: +919630328492
-Address: D-19 shivmoti nagar, indore(mp)
-
 Name: arya verma
 Mobile: +911234567890
 Address: film colony
-
-Name: nishika agrawal
-Mobile: +911234567890
-Address: shakti nagar
 
 Name: atharv vani
 Mobile: +9165372567438
@@ -33,4 +25,8 @@ Address: jabalpur
 Name: Prateek Shah
 Mobile: +91468461354
 Address: B-22 Vinayaka, Varanasi
+
+Name: pihu
+Mobile: +919630328492
+Address: vvv
 
