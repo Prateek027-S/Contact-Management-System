@@ -23,19 +23,17 @@ public:
         mobile = Mobile;
         address = Address;
     }
-    bool chk_contact();    // checks already existing contact
-    bool chk_contact2();   // checks already existing contact for deletion
+    bool chk_contact(string, int);    // checks already existing contact
     void add_contacts();   // adds new contact to file
-    void edit_contact();   // edit contact details
-    void delete_contact(); // delete contact details
+    void edit_or_delete_contact(bool);   // edit or delete contact details
 };
 
-bool Person::chk_contact()
+bool Person::chk_contact(string filename, int chk_type)
 {
     fstream file0;
     string st, st2;
     bool no_match = true;
-    file0.open("ContactBook.txt", ios::in);
+    file0.open(filename, ios::in);
     while (file0.eof() == 0)
     {
         getline(file0, st);
@@ -44,10 +42,37 @@ bool Person::chk_contact()
         string name2 = name;
         transform(name2.begin(), name2.end(), name2.begin(), ::tolower);
         string chk_mobile = "Mobile: " + mobile;
-        if ((st.find(name2, 0) != string::npos) || (st2 == chk_mobile))
+        if(chk_type==1)
         {
-            no_match = false;
-            break;
+            if ((st.find(name2, 0) != string::npos) || (st2 == chk_mobile))
+            {
+                no_match = false;
+                break;
+            }
+        }
+        else if(chk_type==2)
+        {
+            if ((st.find(name2, 0) != string::npos) && (st2 == chk_mobile))
+            {
+                no_match = false;
+                break;
+            }
+        }
+        else if(chk_type==3)
+        {
+            string st3, tmp;
+            string address3 = address;
+            getline(file0, st3);
+            getline(file0, tmp);
+            transform(st3.begin(), st3.end(), st3.begin(), ::tolower);
+            transform(address3.begin(), address3.end(), address3.begin(), ::tolower);
+            string chk_address = "address: "+address3;
+            string chk_name = "name: "+name2;
+            if ((st == chk_name) && (st2 == chk_mobile) && (st3 == chk_address))
+            {
+                no_match = false;
+                break;
+            }
         }
     }
     file0.close();
@@ -56,7 +81,7 @@ bool Person::chk_contact()
 
 void Person::add_contacts()
 {
-    bool no_match = chk_contact();
+    bool no_match = chk_contact("ContactBook.txt", 1);
     if (no_match)
     {
         fstream file1;
@@ -74,37 +99,13 @@ void Person::add_contacts()
         cout << "Please try again..." << endl;
     }
     cout << endl
-         << "Enter any key to continue : ";
+         << "Press Enter key to continue : ";
     getchar();
 }
 
-bool Person::chk_contact2()
+void Person::edit_or_delete_contact(bool edit)
 {
-    fstream file0;
-    string st, st2;
-    bool no_match = true;
-    file0.open("ContactBook.txt", ios::in);
-    while (file0.eof() == 0)
-    {
-        getline(file0, st);
-        getline(file0, st2);
-        transform(st.begin(), st.end(), st.begin(), ::tolower);
-        string name2 = name;
-        transform(name2.begin(), name2.end(), name2.begin(), ::tolower);
-        string chk_mobile = "Mobile: " + mobile;
-        if ((st.find(name2, 0) != string::npos) && (st2 == chk_mobile))
-        {
-            no_match = false;
-            break;
-        }
-    }
-    file0.close();
-    return no_match;
-}
-
-void Person::delete_contact()
-{
-    bool no_match = chk_contact2();
+    bool no_match = chk_contact("ContactBook.txt", 2);
     if (no_match)
         cout << "\nThe entered Contact details were not found!" << endl;
 
@@ -140,84 +141,35 @@ void Person::delete_contact()
             string chk_mobile = "Mobile: " + mobile;
             if ((name3.find(name, 0) != string::npos) && (mobile2 == chk_mobile))
             {
-                continue;
-            }
-            else
-            {
-                file2 << name2 << endl;
-                file2 << mobile2 << endl;
-                file2 << address2 << endl;
-                file2 << endl;
-            }
-            address2 = " ";
-            mobile2 = " ";
-            name2 = " ";
-        }
-        file1.close();
-        file2.close();
-        int status = remove("temp.txt");
-        cout << "Deletion Successful!" << endl;
-    }
-    cout << endl
-         << "Enter any key to continue : ";
-    getchar();
-}
-
-void Person::edit_contact() 
-{
-    bool no_match = chk_contact2();
-    if (no_match)
-        cout << "\nThe entered Contact details were not found!" << endl;
-
-    else
-    {
-        /*Checking if temp.txt already exists */
-        ifstream ifile("temp.txt");
-        if (ifile)
-        {
-            cout << "A file named 'temp.txt' already exists in this directory, kindly move it to a different directory." << endl;
-        }
-        else
-        {
-            char oldname[] = "ContactBook.txt";
-            char newname[] = "temp.txt";
-            int renaming = rename(oldname, newname); // Renaming the file from ContactBook.txt to temp.txt
-        }
-        ifile.close();
-        string name2, mobile2, address2, tmp;
-        fstream file1, file2;
-        file1.open("temp.txt", ios::in);
-        file2.open("ContactBook.txt", ios::app | ios::out); //Creating and opening a new ContactBook.txt
-        int numcontacts = count_contacts("temp.txt");
-        for (int i = 0; i < numcontacts; i++)
-        {
-            getline(file1, name2);
-            getline(file1, mobile2);
-            getline(file1, address2);
-            getline(file1, tmp);
-            transform(name.begin(), name.end(), name.begin(), ::tolower);
-            string name3 = name2;
-            transform(name3.begin(), name3.end(), name3.begin(), ::tolower);
-            string chk_mobile = "Mobile: " + mobile;
-            if ((name3.find(name, 0) != string::npos) && (mobile2 == chk_mobile))
-            {
-                string name4, mobile4, address4;
-                cout<<endl<<"Enter new contact details -";
-                get_input(&name4, &mobile4);
-                cout << "Enter Address : ";
-                getline(cin, address4);
-                Person p(name4, mobile4, address4);
-                if (p.chk_contact2())
+                if(edit)
                 {
-                    file2 << "Name: " << name4 << endl;
-                    file2 << "Mobile: " << mobile4 << endl;
-                    file2 << "Address: " << address4 << endl;
-                    file2 << endl;
-                    cout << "Contact Details Updated successfully!!" << endl;
+                    string name4, mobile4, address4;
+                    cout<<endl<<"Enter new contact details -";
+                    get_input(&name4, &mobile4);
+                    cout << "Enter Address : ";
+                    getline(cin, address4);
+                    Person p(name4, mobile4, address4);
+                    if (p.chk_contact("temp.txt", 3))
+                    {
+                        file2 << "Name: " << name4 << endl;
+                        file2 << "Mobile: " << mobile4 << endl;
+                        file2 << "Address: " << address4 << endl;
+                        file2 << endl;
+                        cout << "Contact Details Updated successfully!!" << endl;
+                    }
+                    else
+                    {
+                        file2 << name2 << endl;
+                        file2 << mobile2 << endl;
+                        file2 << address2 << endl;
+                        file2 << endl;
+                        cout<<"Contact Details already exist"<<endl;
+                    }
                 }
                 else
                 {
-                    cout<<"Contact Details already exist"<<endl;
+                    cout << "Deletion Successful!" << endl;
+                    continue;
                 }
             }
             else
@@ -235,8 +187,7 @@ void Person::edit_contact()
         file2.close();
         int status = remove("temp.txt");
     }
-    cout << endl
-         << "Enter any key to continue : ";
+    cout << endl << "Press Enter key to continue : ";
     getchar();
 }
 
@@ -278,7 +229,7 @@ void showContacts()
         }
         file1.close();
     }
-    cout << "\nEnter any key to Continue : ";
+    cout << "Press Enter key to Continue : ";
     getchar();
 }
 
@@ -397,19 +348,17 @@ int main()
             cout<<"Enter contact details to be edited - ";
             get_input(&Name, &Mobile); // Call by address
             Person p2(Name, Mobile, " ");
-            p2.edit_contact();
-            //get_input();
+            p2.edit_or_delete_contact(true);
             break;
         }
         case 5:
         {
             system("cls");
             string Name, Mobile;
-            cout << setw(60) << "Delete a Contact" << endl
-                 << endl;
+            cout << setw(60) << "Delete a Contact" << endl<< endl;
             get_input(&Name, &Mobile); // Call by address
             Person p2(Name, Mobile, " ");
-            p2.delete_contact();
+            p2.edit_or_delete_contact(false);
             break;
         }
         case 6:
